@@ -11,11 +11,11 @@ const BlogDetail = ({ blogs, handlePostComment }) => {
     const commentRef = useRef();
 
     return (
-        <div>
-            <h3>{title}</h3>
-            <p>Author: <em>{author}</em></p> <hr />
+        <div className='container-fluid mt-2'>
+            <h2 className='text-center'>{title}</h2>
+            <p className='text-muted text-end'>Author: <em>{author}</em></p> <hr />
             <img className='w-100' src={image} alt={image} />
-            <pre>{content}</pre>
+            <pre className='mt-2 p-2 border border-info fs-2'>{content}</pre>
             <hr />
             <div className='container'>
                 <h5 className='text-primary'>Reader's opinions</h5>
