@@ -1,12 +1,10 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom';
 import BlogCard from '../components/blog/BlogCard';
-// import BlogEdit from '../components/blog/BlogEdit';
 
-const blogs = require('../models/blogs.models');
+const Home = ({blogs}) => {
+    document.title = "Home Page";
 
-const Home = () => {
-    document.title = "Home Page"
     const [blogList, setBlogList] = useState(blogs);
 
     const handleDelete = (id) => {
@@ -22,7 +20,7 @@ const Home = () => {
                 return (
                     <div key={blog.id}>
                         <BlogCard
-                            handle={() => handleDelete(blog.id)}
+                            handleDelete={() => handleDelete(blog.id)}
                             {...blog} />
                     </div>
                 );

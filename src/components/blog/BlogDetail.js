@@ -1,8 +1,7 @@
-import React, { useRef, useState } from 'react'
+import React, {  memo, useRef } from 'react'
 import { useParams } from 'react-router-dom';
-import blogs from '../../models/blogs.models';
 
-const BlogDetail = () => {
+const BlogDetail = ({ blogs, handlePostComment }) => {
     const { id } = useParams();
     const blog = blogs.find(x => x.id === Number(id));
 
@@ -10,20 +9,12 @@ const BlogDetail = () => {
     document.title = title;
 
     const commentRef = useRef();
-    const [commentList, setCommentList] = useState(comments);
-
-    const handlePostComment = () => {
-        setCommentList([
-            ...commentList,
-            commentRef.current
-        ]);
-    }
 
     return (
         <div>
             <h3>{title}</h3>
             <p>Author: <em>{author}</em></p> <hr />
-            <img src={image} alt={image} />
+            <img className='w-100' src={image} alt={image} />
             <pre>{content}</pre>
             <hr />
             <div className='container'>
@@ -40,14 +31,25 @@ const BlogDetail = () => {
                         className="form-control"
                         placeholder="What do you think?"
                         id="floatingTextarea"
-                        name="comment"
                         ref={commentRef}
                     ></textarea> <br />
                     <input
                         type="button"
                         value="Post comment"
                         className="btn btn-secondary"
-                        onClick={handlePostComment}
+                        onClick={() => {
+                            let comment_id = 1
+                            if (comments.length > 0){
+                                comment_id = comments[comments.length - 1].id + 1;
+                            }
+                            const new_comment = {
+                                id: comment_id,
+                                content: commentRef.current.value
+                            }
+                            const new_comments = [...comments, new_comment];
+                            handlePostComment(id, new_comments);
+                            commentRef.current.value = "";
+                        }}
                     />
                 </form>
             </div>
@@ -55,4 +57,4 @@ const BlogDetail = () => {
     );
 }
 
-export default BlogDetail
+export default memo(BlogDetail);

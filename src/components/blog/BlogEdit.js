@@ -1,27 +1,44 @@
-import React, { useRef, useState } from 'react'
-import { useParams } from 'react-router-dom'
-import blogs from '../../models/blogs.models';
+import React, { useState, useRef, memo } from 'react'
+import { useNavigate, useParams } from 'react-router-dom';
 
-const BlogEdit = () => {
+const BlogEdit = ({ handleEdit, blogs }) => {
     const { id } = useParams();
-    const blog = blogs.find(blog => blog.id === Number(id));
+    const navigate = useNavigate()
 
-    // console.log(blog);
+    const blog = blogs.find(blog => blog.id === Number(id));
+    console.log(blog);
 
     const [title, setTitle] = useState(blog.title);
-    const authorRef = useRef();
-    const imageRef = useRef();
-    const descriptionRef = useRef();
-    const contentRef = useRef();
+    const authorRef = useRef(blog.author);
+    const imageRef = useRef(blog.image);
+    const descriptionRef = useRef(blog.description);
+    const contentRef = useRef(blog.content);
+
+    document.title = title;
 
     const handleTitleChange = (e) => {
         setTitle(e.target.value);
         document.title = e.target.value;
     }
 
+    const makeBlogs = () => {
+        const new_blog = {
+            id: Number(id),
+            title: title,
+            description: descriptionRef.current.value,
+            author: authorRef.current.value,
+            image: imageRef.current.value,
+            content: contentRef.current.value,
+            comments: []
+        };
+
+        handleEdit(new_blog);
+        navigate("/");
+    }
+
     return (
         <>
-            <form className="px-4 py-3" action="/blogs">
+            <form className="px-4 py-3" action="">
                 <div className="mb-3">
                     <label 
                         htmlFor="title" 
@@ -43,10 +60,9 @@ const BlogEdit = () => {
                     <input 
                         id="author"
                         type="text" 
-                        className="form-control" 
-                        value={blog.author}
+                        className="form-control"
+                        defaultValue={blog.author} 
                         ref={authorRef}
-                        onChange={() => {}}
                     />
                 </div>
                 <div className="mb-3">
@@ -57,10 +73,9 @@ const BlogEdit = () => {
                     <input 
                         id="image"
                         type="text" 
-                        className="form-control" 
-                        value={blog.image}
+                        className="form-control"
+                        defaultValue={blog.image} 
                         ref={imageRef}
-                        onChange={() => {}}
                     />
                 </div>
                 <div className="mb-3">
@@ -73,9 +88,8 @@ const BlogEdit = () => {
                         className="form-control" 
                         rows="3" 
                         name="content"
+                        defaultValue={blog.description}
                         ref={descriptionRef}
-                        value={blog.description}
-                        onChange={() => {}}
                     ></textarea>
                 </div>
                 <div className="mb-3">
@@ -88,15 +102,19 @@ const BlogEdit = () => {
                         className="form-control" 
                         rows="3" 
                         name="content"
-                        value={blog.content}
+                        defaultValue={blog.content}
                         ref={contentRef}
-                        onChange={() => {}}
                     ></textarea>
                 </div>
-                <input type="submit" value="Done" className="btn btn-primary" />
+                <input 
+                    type="button" 
+                    value="Done" 
+                    className="btn btn-primary" 
+                    onClick={makeBlogs}
+                />
             </form>
         </>
     )
 }
 
-export default BlogEdit
+export default memo(BlogEdit);

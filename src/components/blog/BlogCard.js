@@ -1,7 +1,7 @@
-import React from 'react'
+import React, { memo } from 'react'
 import { Link } from 'react-router-dom';
 
-const BlogCard = ({ handle, ...props }) => {
+const BlogCard = ({ handleDelete, ...props }) => {
     const { id, title, image, description, author } = props;
 
     return (
@@ -19,11 +19,11 @@ const BlogCard = ({ handle, ...props }) => {
                 <button
                     type="button"
                     className="btn btn-danger ml-2"
-                    onClick={handle}
+                    onClick={handleDelete}
                 >Delete</button>
             </div>
         </div>
     );
 }
 
-export default BlogCard
+export default memo(BlogCard);

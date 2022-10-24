@@ -1,6 +1,9 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, memo } from 'react'
+import { useNavigate } from 'react-router-dom';
 
-const BlogCreate = () => {
+const BlogCreate = ({ handleAdd }) => {
+    const navigate = useNavigate()
+
     const [title, setTitle] = useState("");
     const authorRef = useRef();
     const imageRef = useRef();
@@ -12,9 +15,24 @@ const BlogCreate = () => {
         document.title = e.target.value;
     }
 
+    const makeBlogs = () => {
+        const new_blog = {
+            id: 0,
+            title: title,
+            description: descriptionRef.current.value,
+            author: authorRef.current.value,
+            image: imageRef.current.value,
+            content: contentRef.current.value,
+            comments: []
+        };
+
+        handleAdd(new_blog);
+        navigate("/");
+    }
+
     return (
         <>
-            <form className="px-4 py-3" action="/blogs">
+            <form className="px-4 py-3" action="">
                 <div className="mb-3">
                     <label 
                         htmlFor="title" 
@@ -38,7 +56,6 @@ const BlogCreate = () => {
                         type="text" 
                         className="form-control" 
                         ref={authorRef}
-                        onChange={() => {}}
                     />
                 </div>
                 <div className="mb-3">
@@ -51,7 +68,6 @@ const BlogCreate = () => {
                         type="text" 
                         className="form-control" 
                         ref={imageRef}
-                        onChange={() => {}}
                     />
                 </div>
                 <div className="mb-3">
@@ -65,7 +81,6 @@ const BlogCreate = () => {
                         rows="3" 
                         name="content"
                         ref={descriptionRef}
-                        onChange={() => {}}
                     ></textarea>
                 </div>
                 <div className="mb-3">
@@ -79,13 +94,17 @@ const BlogCreate = () => {
                         rows="3" 
                         name="content"
                         ref={contentRef}
-                        onChange={() => {}}
                     ></textarea>
                 </div>
-                <input type="submit" value="Done" className="btn btn-primary" />
+                <input 
+                    type="button" 
+                    value="Done" 
+                    className="btn btn-primary" 
+                    onClick={makeBlogs}
+                />
             </form>
         </>
     )
 }
 
-export default BlogCreate
+export default memo(BlogCreate);
